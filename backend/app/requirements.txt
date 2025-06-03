@@ -1,0 +1,13 @@
+gunicorn==21.*
+Flask==3.1.*
+Flask-SQLAlchemy==3.1.*
+Flask-RESTful==0.3.10
+Flask-Migrate==4.*
+marshmallow==3.22.*
+marshmallow-sqlalchemy==0.29.*
+Flask-Marshmallow==0.15.*
+psycopg2-binary==2.9.*
+flasgger==0.9.*
+PyYAML==6.*
+pytest==8.2.*
+pytest-flask>=1.3
