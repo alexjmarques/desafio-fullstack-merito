@@ -9,6 +9,15 @@ api = Api(bp)
 
 class WalletSummaryResource(Resource):
     def get(self):
+        """
+        Resumo do saldo da carteira
+        ---
+        tags:
+          - Carteira
+        responses:
+          200:
+            description: Resumo do saldo da carteira
+        """
         return wallet_summary(), 200
 
 

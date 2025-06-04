@@ -4,22 +4,27 @@ from app.api.funds import bp as funds_bp
 from app.api.transactions import bp as tx_bp
 from app.api.wallet import bp as wallet_bp
 from flasgger import Swagger
+from flask_cors import CORS
+
+from app.models import Fund, Transaction
 
 def create_app(config_name: str = "dev") -> Flask:
     app = Flask(__name__)
     app.config.from_object(f"app.config.{config_name.capitalize()}Config")
 
-    # extensões …
+    # extensões
     db.init_app(app)
     ma.init_app(app)
     migrate.init_app(app, db)
 
-    # blueprints …
-    app.register_blueprint(funds_bp)
-    app.register_blueprint(tx_bp)
-    app.register_blueprint(wallet_bp)
+    # blueprints
+    app.register_blueprint(funds_bp, url_prefix="/api")
+    app.register_blueprint(tx_bp, url_prefix="/api")
+    app.register_blueprint(wallet_bp, url_prefix="/api")
 
-    # ---------- Swagger ----------
+    CORS(app, resources={r"/api/*": {"origins": "http://localhost:3000"}})
+
+    # Swagger
     swagger_template = {
         "info": {
             "title": "Dashboard de Investimento API",
@@ -30,15 +35,8 @@ def create_app(config_name: str = "dev") -> Flask:
             {"url": "http://localhost:8000", "description": "Local"}
         ]
     }
-
-
     swagger_config = Swagger.DEFAULT_CONFIG.copy()
     swagger_config.update({"specs_route": "/docs/"})
+    Swagger(app, template=swagger_template, config=swagger_config, parse=True)
 
-    Swagger(
-        app,
-        template=swagger_template,
-        config=swagger_config,
-        parse=True
-    )
     return app

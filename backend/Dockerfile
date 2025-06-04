@@ -10,6 +10,8 @@ RUN pip install -r requirements.txt
 
 COPY app/ .
 
+RUN echo "DATABASE_URL=$DATABASE_URL"
+
 # Entrypoint aplica migrações antes de rodar a API
 COPY ./entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh

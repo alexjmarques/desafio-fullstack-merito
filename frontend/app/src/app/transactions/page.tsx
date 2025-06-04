@@ -1,49 +1,67 @@
 'use client';
+import Loading from '@/components/Loading';
+import NotFoundItens from '@/components/NotFoundItens';
+import Pagination from '@/components/Pagination';
 import TransactionForm from '@/components/TransactionForm';
+import TransactionsTableFilter from '@/components/TransactionsTableFilter';
 import { fetcher } from '@/lib/api';
-import { useState } from 'react';
-import useSWR from 'swr';
+import { useEffect, useState } from 'react';
+import { FundLite, Transaction } from '../../interfaces';
 
-interface Transaction {
-  id: number;
-  date: string;
-  tx_type: string;
-  fund: { ticker: string };
-  share_qty: number;
-  amount: number;
-}
 
 export default function TransactionsPage() {
-  const { data: txs, mutate } = useSWR('/transactions', fetcher);
-  const { data: funds } = useSWR('/funds', fetcher);
+  const [isLoading, setIsLoading] = useState(true);
+  const [txs, setTxs] = useState<Transaction[]>([]);
+  const [funds, setFunds] = useState<FundLite[]>([]);
+  const [transactionsItem, setTransactionsItem] = useState<Transaction | null>(null);
   const [open, setOpen] = useState(false);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = txs?.slice(indexOfFirstItem, indexOfLastItem);
+
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
+  const handlefundId = (tx: Transaction) => {
+    setTransactionsItem(tx);
+    setOpen(true);
+  }
+
+  useEffect(() => {
+    fetcher(`/transactions`).then(setTxs).finally(() => setIsLoading(false));
+    fetcher(`/funds`).then(setFunds).finally(() => setIsLoading(false));
+    setIsLoading(false);
+  }, [txs]);
 
   return (
     <>
+    {isLoading ? (
+      <Loading />
+    ) : (
+
+    <>
       <div className="flex items-center justify-between mb-4">
         <h1 className="text-xl font-semibold">Movimentações</h1>
-        <button onClick={() => setOpen(true)} className="btn-primary">+ Nova</button>
+        <button onClick={() => setOpen(true)} className="font-semibold rounded-md p-2 px-4 transition-colors duration-300 hover:bg-gray-600 hover:text-white cursor-pointer">+ Nova movimentação</button>
       </div>
 
-      {txs && (
-        <table className="w-full border">
-          <thead className="bg-zinc-100 text-left">
-            <tr><th>Data</th><th>Tipo</th><th>Fundo</th><th>Cotas</th><th>Valor (R$)</th></tr>
-          </thead>
-          <tbody>
-            {txs.map((t: Transaction) => (
-              <tr key={t.id} className="border-t">
-                <td>{t.date}</td><td>{t.tx_type}</td><td>{t.fund.ticker}</td>
-                <td>{t.share_qty}</td><td>{Number(t.amount).toFixed(2)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      {txs && txs.length > 0 ? (
+        <>
+        <TransactionsTableFilter data={currentItems as Transaction[]} funds={funds} handlefundId={handlefundId} />
+        <Pagination itemsPerPage={itemsPerPage} totalItems={txs.length} currentPage={currentPage} paginate={paginate} />
+      </>
+      ) : (
+       <NotFoundItens />
       )}
 
       {open && funds && (
-        <TransactionForm funds={funds} onClose={() => setOpen(false)} onSaved={() => mutate()} />
+        <TransactionForm isOpen={open} setIsOpen={setOpen} onSaved={() => fetcher('/transactions')} transactionsItem={transactionsItem} />
       )}
+    </>
+    )}
     </>
   );
 }

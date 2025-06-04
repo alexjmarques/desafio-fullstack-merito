@@ -25,8 +25,13 @@ class FundsResource(Resource):
           200:
             description: OK
         """
-        funds = Fund.query.all()
-        return list_schema.dump(funds), 200
+        try:
+          funds = Fund.query.all()
+          return list_schema.dump(funds), 200
+        except Exception as e:
+          import traceback
+          traceback.print_exc()
+          return {"error": str(e)}, 500
 
 
     def post(self):
@@ -43,6 +48,7 @@ class FundsResource(Resource):
         fund = Fund(**args)
         db.session.add(fund)
         db.session.commit()
+        return schema.dump(fund), 201
 
 
 class FundDetailResource(Resource):
@@ -56,8 +62,10 @@ class FundDetailResource(Resource):
           200:
             description: OK
         """
-        fund = Fund.query.get_or_404(id)
-        return schema.dump(fund)
+        fund = Fund.query.filter_by(id=id).first()
+        if fund is None:
+            return {"error": "Fundo não encontrado"}, 404
+        return schema.dump(fund), 200
 
     def put(self, id):
         """
@@ -69,28 +77,32 @@ class FundDetailResource(Resource):
           200:
             description: Atualizado com sucesso
         """
-        fund = Fund.query.get_or_404(id)
-        args = _parser.parse_args()
-        for k, v in args.items():
-            setattr(fund, k, v)
-        db.session.commit()
-        return schema.dump(fund), 200
+        try:
+          fund = Fund.query.get_or_404(id)
+          args = _parser.parse_args()
+          for k, v in args.items():
+              setattr(fund, k, v)
+          db.session.commit()
+          return schema.dump(fund), 200
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            return {"error": str(e)}, 500
 
     def delete(self, id):
         """
-        Deletar um fundo
+        Excluir um fundo
         ---
         tags:
-        - Fundos
+          - Fundos
         responses:
-        204:
-            description: Deletado com sucesso
-        404:
-            description: Fundo não encontrado
+          204:
+            description: Excluído com sucesso
         """
         fund = Fund.query.get_or_404(id)
         db.session.delete(fund)
         db.session.commit()
+        return '', 204
 
 
 api.add_resource(FundsResource, "/funds")

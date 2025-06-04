@@ -38,9 +38,6 @@ services:
       - api
     ports:
       - "3000:3000"
-    volumes:
-      - ./frontend:/opt/app
-      - ./frontend/docs:/opt/app/docs
     env_file: .env
 
 volumes:
