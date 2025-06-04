@@ -22,7 +22,7 @@ def create_app(config_name: str = "dev") -> Flask:
     app.register_blueprint(tx_bp, url_prefix="/api")
     app.register_blueprint(wallet_bp, url_prefix="/api")
 
-    CORS(app, resources={r"/api/*": {"origins": "http://localhost:3000"}})
+    CORS(app, resources={r"/api/*": {"origins": "*"}})
 
     # Swagger
     swagger_template = {

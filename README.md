@@ -49,9 +49,10 @@ cd desafio-fullstack-merito
 cp .env.example .env
 
 # Suba os containers
-docker-compose up --build
+docker-compose up --build -d
 ```
 
+Na primeira execução o front Next.js demora um pouco para subir, mas uma vez subido os proximos builds são mais rápidos.
 Após subir o projeto, as interfaces estarão disponíveis em:
 
 - **Frontend:** `http://localhost:3000`
