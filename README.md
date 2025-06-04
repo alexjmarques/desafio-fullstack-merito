@@ -1,6 +1,16 @@
 # 📦 Desafio Fullstack Mérito
 
-O projeto fullstack é composto por um frontend moderno com React e um backend robusto usando Python com Flask, organizado com Docker para facilitar execução, apenas com um comando.
+Este projeto fullstack foi desenvolvido com foco em desempenho, organização e facilidade de execução. Conta com um frontend moderno em **Next.js (React)** e um backend robusto em **Python (Flask)**, orquestrados por **Docker**, permitindo que toda a aplicação seja iniciada com apenas um comando.
+
+Ao executar o projeto via Docker, toda a estrutura é automaticamente configurada:
+
+- Backend: Python + Flask
+- Banco de Dados: PostgreSQL
+- Frontend: Next.js com TypeScript
+
+No backend, segui as diretrizes propostas no desafio, priorizando um código limpo, funcional e bem organizado. Implementei a documentação da API utilizando **Swagger**, acessível via browser para facilitar a consulta das rotas. Também incluí um **entrypoint** que executa uma seed inicial com dados de fundos cadastrados automaticamente ao iniciar o container.
+
+No frontend, utilizei o framework **Next.js** para otimizar a performance e garantir uma experiência mais fluida na interface. A aplicação conta com bibliotecas modernas para gerenciamento de formulários, estilização e requisições assíncronas.
 
 ---
 
@@ -14,7 +24,6 @@ O projeto fullstack é composto por um frontend moderno com React e um backend r
 - **Serialização:** Marshmallow
 - **Banco de dados:** PostgreSQL
 - **Documentação:** Swagger (via Flasgger)
-- **Testes:** Pytest
 - **Gerenciamento de CORS:** Flask-CORS
 
 ### Frontend
