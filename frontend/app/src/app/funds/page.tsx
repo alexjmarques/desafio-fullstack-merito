@@ -27,6 +27,14 @@ export default function FundsPage() {
   async function handleDelete(id: number) {
     try {
       await deleteItem(`/funds/${id}`);
+      const data = await fetcher('/funds');
+      setFunds(data.sort((a: Fund, b: Fund) => (b.id ?? 0) - (a.id ?? 0)));
+
+      const totalPages = Math.ceil(data.length / itemsPerPage);
+      if (currentPage > totalPages) {
+        setCurrentPage(totalPages);
+      }
+
     } catch (error) {
       console.error("Erro ao deletar fundo:", error);
     }
@@ -38,9 +46,10 @@ export default function FundsPage() {
   }
 
   useEffect(() => {
-    fetcher(`/funds`).then(setFunds).finally(() => setIsLoading(false));
-    setIsLoading(false);
-  }, [funds]);
+    fetcher(`/funds`).then((data: Fund[]) => {
+      setFunds(data.sort((a: Fund, b: Fund) => (b.id ?? 0) - (a.id ?? 0)));
+    }).finally(() => setIsLoading(false));
+  }, []);
 
   return (
     <>
@@ -67,7 +76,7 @@ export default function FundsPage() {
               </tr>
             </thead>
             <tbody>
-              {currentItems.sort((a, b) => new Date(b.date ?? '').getTime() - new Date(a.date ?? '').getTime()).map((f: Fund) => (
+              {currentItems.map((f: Fund) => (
                 <tr key={f.id} className="border-t border-gray-200 text-sm">
                   <td className="px-4 py-4">{f.ticker}</td>
                   <td className="px-4 py-4">{f.name}</td>
@@ -88,7 +97,22 @@ export default function FundsPage() {
         <NotFoundItens />
       )}
 
-      {open && <FundForm onClose={() => {setOpen(false); setEditFund(null);}} onSaved={() => fetcher('/funds')} isOpen={open} setIsOpen={setOpen} fund={editFund} />}
+      {open && (
+        <FundForm
+          onClose={() => {
+            setOpen(false);
+            setEditFund(null);
+          }}
+          onSaved={async () => {
+            const data = await fetcher('/funds');
+            setFunds(data.sort((a: Fund, b: Fund) => (b.id ?? 0) - (a.id ?? 0)));
+            setCurrentPage(1);
+          }}
+          isOpen={open}
+          setIsOpen={setOpen}
+          fund={editFund}
+        />
+      )}
     </div>
     )}
     </>

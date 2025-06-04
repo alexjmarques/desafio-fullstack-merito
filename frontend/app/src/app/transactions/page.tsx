@@ -31,10 +31,19 @@ export default function TransactionsPage() {
   }
 
   useEffect(() => {
-    fetcher(`/transactions`).then(setTxs).finally(() => setIsLoading(false));
-    fetcher(`/funds`).then(setFunds).finally(() => setIsLoading(false));
-    setIsLoading(false);
-  }, [txs]);
+    const loadData = async () => {
+      setIsLoading(true);
+      const [transactionsData, fundsData] = await Promise.all([
+        fetcher(`/transactions`),
+        fetcher(`/funds`)
+      ]);
+      setTxs(transactionsData.sort((a: Transaction, b: Transaction) => new Date(b.date).getTime() - new Date(a.date).getTime()));
+      setFunds(fundsData);
+      setIsLoading(false);
+    };
+
+    loadData();
+  }, []);
 
   return (
     <>
@@ -58,7 +67,23 @@ export default function TransactionsPage() {
       )}
 
       {open && funds && (
-        <TransactionForm isOpen={open} setIsOpen={setOpen} onSaved={() => fetcher('/transactions')} transactionsItem={transactionsItem} />
+        <TransactionForm
+        isOpen={open}
+        setIsOpen={setOpen}
+        onSaved={async () => {
+          const data = await fetcher('/transactions');
+          setTxs(data.sort((a: Transaction, b: Transaction) => {
+            const dateA = new Date(a.date).getTime();
+            const dateB = new Date(b.date).getTime();
+            return dateA === dateB
+              ? (b.id ?? 0) - (a.id ?? 0)
+              : dateB - dateA;
+          }));
+          setCurrentPage(1);
+          setTransactionsItem(null);
+        }}
+        transactionsItem={transactionsItem}
+      />
       )}
     </>
     )}

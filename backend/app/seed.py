@@ -13,10 +13,6 @@ def seed_data():
         Fund(name="Vinci Shopping Centers", ticker="VISC11", fund_type="Fundo Imobiliário", share_value=126.88),
         Fund(name="BTG Pactual Corporate Office", ticker="BRCO11", fund_type="Fundo Imobiliário", share_value=89.75),
         Fund(name="BTG Pactual Logística", ticker="BTLG11", fund_type="Fundo Imobiliário", share_value=117.00),
-        Fund(name="CSHG Renda Urbana", ticker="HGRU11", fund_type="Fundo Imobiliário", share_value=134.50),
-        Fund(name="Santander Papéis Imobiliários", ticker="SADI11", fund_type="Fundo Imobiliário", share_value=99.30),
-        Fund(name="Bresco Logística", ticker="BRCO12", fund_type="Fundo Imobiliário", share_value=92.65),
-        Fund(name="Fundo ABC", ticker="ABCD11", fund_type="Fundo Imobiliário", share_value=120.00),
     ]
 
     db.session.bulk_save_objects(funds)

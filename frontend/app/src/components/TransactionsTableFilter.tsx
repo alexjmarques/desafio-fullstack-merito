@@ -1,6 +1,7 @@
 'use client';
 
 import { FundLite, Transaction } from '../interfaces';
+import { formatDate } from '../utils/formatData';
 
 export default function TransactionsTableFilter({ data, funds, handlefundId }: { data: Transaction[], funds: FundLite[], handlefundId: (t: Transaction) => void }) {
 
@@ -23,11 +24,7 @@ export default function TransactionsTableFilter({ data, funds, handlefundId }: {
                 const fund = funds?.find((f: FundLite) => f.id === t.fund_id);
               return (
                 <tr key={t.id} className={`border-t border-gray-200 text-sm`}>
-                  <td className={`px-4 py-4 ${t.tx_type === 'RESGATE' ? 'line-through' : ''}`}>{new Date(t.date).toLocaleDateString('pt-BR', {
-                    day: '2-digit',
-                    month: '2-digit',
-                    year: 'numeric',
-                  })}</td>
+                  <td className={`px-4 py-4 ${t.tx_type === 'RESGATE' ? 'line-through' : ''}`}>{formatDate(t.date)}</td>
                   <td className={`px-4 py-4 ${t.tx_type === 'RESGATE' ? 'text-red-600 line-through' : 'text-green-600'}`}>{t.tx_type}</td>
                   <td className={`px-4 py-4 ${t.tx_type === 'RESGATE' ? 'line-through' : ''}`}>{fund?.ticker ?? ''} - {fund?.name ?? ''}</td>
                   <td className={`px-4 py-4 ${t.tx_type === 'RESGATE' ? 'line-through' : ''}`}>{t?.share_qty ?? ''}</td>

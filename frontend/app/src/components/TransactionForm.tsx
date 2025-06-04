@@ -18,7 +18,7 @@ export default function TransactionForm({ isOpen, setIsOpen, onSaved, transactio
   }, [isOpen]);
 
   const initialValues = {
-    date: new Date().toISOString().split('T')[0],
+    date: transactionsItem?.date || new Date().toISOString().split('T')[0],
     amount: transactionsItem?.amount || 0,
     share_qty: parseFloat(transactionsItem?.share_qty?.toString() ?? '0') || 0.0,
     tx_type: transactionsItem ? 'RESGATE' : 'APORTE',
@@ -38,7 +38,11 @@ export default function TransactionForm({ isOpen, setIsOpen, onSaved, transactio
 
   async function handleSubmit(values: typeof initialValues) {
     try {
-      await post('/transactions', values);
+      const dataToSend = {
+        ...values,
+        date: values.date || new Date().toISOString(),
+      };
+      await post('/transactions', dataToSend);
       onSaved();
       setIsOpen(false);
     } catch (error) {

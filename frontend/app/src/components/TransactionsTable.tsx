@@ -3,6 +3,7 @@
 import { fetcher } from '@/lib/api';
 import { useEffect, useState } from 'react';
 import { Fund, Transaction } from '../interfaces';
+import { formatDate } from '../utils/formatData';
 
 
 
@@ -23,7 +24,10 @@ export default function TransactionsTable() {
   if (transactions.length === 0)
     return <p className="text-zinc-500">Ainda não há movimentações registradas.</p>;
 
-  const lastFourTransactions = transactions.slice(-4);
+  const lastFourTransactions = transactions
+  .slice()
+  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+  .slice(0, 4);
 
   return (
     <div className="overflow-hidden rounded-xl shadow bg-white w-full">
@@ -43,11 +47,7 @@ export default function TransactionsTable() {
             return (
               <tr key={tx.id} className="border-t border-gray-200 text-sm">
                 <td className={`px-4 py-4 ${tx.tx_type === 'RESGATE' ? 'line-through' : ''}`}>
-                  {new Date(tx.date).toLocaleDateString('pt-BR', {
-                    day: '2-digit',
-                    month: '2-digit',
-                    year: 'numeric',
-                  })}
+                  {formatDate(tx.date)}
                 </td>
                 <td className={`px-4 py-4 ${tx.tx_type === 'RESGATE' ? 'line-through' : ''}`}>{fund?.ticker ?? ''} - {fund?.name ?? ''}</td>
                 <td
