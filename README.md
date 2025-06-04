@@ -21,7 +21,6 @@ O projeto fullstack é composto por um frontend moderno com React e um backend r
 - **Linguagem:** TypeScript
 - **Framework:** Next.js (React)
 - **Bibliotecas:**
-  - SWR (data fetching)
   - Axios
   - Tailwind CSS (estilização)
   - Headless UI (componentes de acessibilidade)
