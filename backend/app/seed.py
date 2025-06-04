@@ -17,13 +17,6 @@ def seed_data():
         Fund(name="Santander Papéis Imobiliários", ticker="SADI11", fund_type="Fundo Imobiliário", share_value=99.30),
         Fund(name="Bresco Logística", ticker="BRCO12", fund_type="Fundo Imobiliário", share_value=92.65),
         Fund(name="Fundo ABC", ticker="ABCD11", fund_type="Fundo Imobiliário", share_value=120.00),
-        Fund(name="Fundo EFG", ticker="EFGH11", fund_type="Fundo Imobiliário", share_value=130.00),
-        Fund(name="Fundo IJK", ticker="IJKL11", fund_type="Fundo Imobiliário", share_value=140.00),
-        Fund(name="Fundo MNO", ticker="MNOP11", fund_type="Fundo Imobiliário", share_value=150.00),
-        Fund(name="Fundo QRS", ticker="QRST11", fund_type="Fundo Imobiliário", share_value=160.00),
-        Fund(name="Fundo UVW", ticker="UVWX11", fund_type="Fundo Imobiliário", share_value=170.00),
-        Fund(name="Fundo XYZ", ticker="YZAB11", fund_type="Fundo Imobiliário", share_value=180.00),
-        Fund(name="Hedge Top FOFII", ticker="HFOF11", fund_type="Fundo Imobiliário", share_value=89.00),
     ]
 
     db.session.bulk_save_objects(funds)

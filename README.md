@@ -47,6 +47,7 @@ cd desafio-fullstack-merito
 
 # Copie os dois arquivo de variáveis de ambiente
 cp .env.example .env
+cp frontend/app/.env.example frontend/app/.env
 
 # Suba os containers
 docker-compose up --build -d
