@@ -56,7 +56,7 @@ Na primeira execução o front Next.js demora um pouco para subir, mas uma vez s
 Após subir o projeto, as interfaces estarão disponíveis em:
 
 - **Frontend:** `http://localhost:3000`
-- **Backend (API):** `http://localhost:8000/api`
+- **Backend (API):** `http://localhost:8000/docs/`
 
 ---
 
